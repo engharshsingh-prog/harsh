@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#f5eaf4">
+	<meta name="description" content="A little birthday constellation, made with love for Harshita Singh.">
+	<title>For Harshita Singh, With Love</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+	<style>
+		/* Change these color variables to adjust the birthday card's pastel palette. */
+		:root {
+			color-scheme: light;
+			--ink: #463b50;
+			--muted: #82778c;
+			--paper: #fffaf5;
+			--pink: #eea7c0;
+			--pink-deep: #c76e9d;
+			--lilac: #c9b6e6;
+			--lavender: #8e79b1;
+			--peach: #f5c3a3;
+			--butter: #f5df9c;
+			--mint: #b6d8c4;
+			--glass: rgba(255, 251, 249, .68);
+			--line: rgba(103, 82, 125, .15);
+			--display: "Playfair Display", Georgia, serif;
+			--body: "DM Sans", "Trebuchet MS", sans-serif;
+		}
+		*, *::before, *::after { box-sizing: border-box; }
+		html { min-width: 320px; min-height: 100%; scroll-behavior: smooth; }
+		body {
+			min-width: 320px;
+			min-height: 100vh;
+			min-height: 100svh;
+			margin: 0;
+			overflow-x: hidden;
+			background: linear-gradient(135deg, #f8eaf1 0%, #f3effb 48%, #eaf4ef 100%);
+			color: var(--ink);
+			font-family: var(--body);
+			font-size: 15px;
+			line-height: 1.55;
+		}
+		body::before {
+			position: fixed;
+			z-index: -2;
+			inset: 0;
+			background:
+				radial-gradient(ellipse at 8% 13%, rgba(245, 223, 156, .35), transparent 25rem),
+				radial-gradient(ellipse at 88% 83%, rgba(201, 182, 230, .36), transparent 28rem),
+				radial-gradient(ellipse at 85% 12%, rgba(238, 167, 192, .31), transparent 23rem);
+			content: "";
+			pointer-events: none;
+		}
+		body::after {
+			position: fixed;
+			z-index: -1;
+			inset: 0;
+			background-image: radial-gradient(rgba(255,255,255,.83) .8px, transparent 1px);
+			background-size: 47px 47px;
+			content: "";
+			opacity: .44;
+			pointer-events: none;
+			animation: dust-drift 42s linear infinite;
+		}
+		button { color: inherit; font: inherit; }
+		button:focus-visible { outline: 3px solid var(--pink-deep); outline-offset: 4px; }
+		[hidden] { display: none !important; }
+
+		.app { position: relative; min-height: 100vh; min-height: 100svh; isolation: isolate; }
+		.sparkle-field { position: fixed; z-index: -1; inset: 0; overflow: hidden; pointer-events: none; }
+		.sparkle-field span { position: absolute; color: #fff; font-size: 17px; text-shadow: 0 0 14px rgba(255,255,255,.98), 0 0 24px rgba(199,110,157,.3); animation: twinkle 3.4s ease-in-out infinite; }
+		.sparkle-field span:nth-child(1) { top: 12%; left: 12%; }
+		.sparkle-field span:nth-child(2) { top: 29%; right: 12%; color: #df91b4; animation-delay: .5s; }
+		.sparkle-field span:nth-child(3) { bottom: 19%; left: 19%; color: #ad96d0; animation-delay: 1.2s; }
+		.sparkle-field span:nth-child(4) { right: 19%; bottom: 11%; color: #dda984; animation-delay: 1.9s; }
+		.sparkle-field span:nth-child(5) { top: 54%; left: 5%; color: #c79fdb; animation-delay: .9s; }
+		.sparkle-field span:nth-child(6) { top: 61%; right: 4%; color: #df99ae; animation-delay: 1.5s; }
+
+		.topbar { position: fixed; z-index: 20; top: 0; right: 0; left: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; width: min(1280px, calc(100% - 38px)); margin-inline: auto; padding-block: 16px; pointer-events: none; }
+		.topbar > * { pointer-events: auto; }
+		.brand { display: inline-flex; align-items: center; gap: 8px; color: #72617d; font-size: 11px; font-weight: 700; letter-spacing: 1.7px; text-decoration: none; text-transform: uppercase; }
+		.brand-star { color: var(--pink-deep); font-size: 17px; }
+		.top-actions { display: flex; align-items: center; gap: 13px; }
+		.countdown { display: flex; align-items: center; gap: 6px; padding: 5px 11px; border: 1px solid rgba(255,255,255,.72); border-radius: 999px; background: rgba(255,255,255,.48); color: #786c84; font-size: 10px; font-weight: 600; backdrop-filter: blur(12px); }
+		.countdown strong { color: var(--pink-deep); font-variant-numeric: tabular-nums; }
+		.sound-toggle { display: inline-flex; min-width: 82px; min-height: 36px; align-items: center; justify-content: center; gap: 6px; padding: 6px 11px; border: 1px solid rgba(255,255,255,.72); border-radius: 999px; background: rgba(255,255,255,.52); color: #685d73; cursor: pointer; font-size: 11px; font-weight: 600; backdrop-filter: blur(12px); transition: background .2s ease, transform .2s ease; }
+		.sound-toggle:hover { transform: translateY(-2px); background: rgba(255,255,255,.82); }
+		.sound-icon { color: var(--pink-deep); font-size: 15px; }
+
+		.progress { position: fixed; z-index: 19; top: 61px; right: 0; left: 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
+		.progress-button { display: grid; width: 23px; height: 23px; place-items: center; padding: 0; border: 0; background: transparent; cursor: pointer; }
+		.progress-dot { width: 8px; height: 8px; border: 1px solid rgba(126, 97, 139, .42); border-radius: 50%; background: rgba(255,255,255,.46); transition: width .3s ease, background .3s ease, border-radius .3s ease; }
+		.progress-button[aria-current="step"] .progress-dot { width: 23px; border-color: var(--pink-deep); border-radius: 8px; background: linear-gradient(90deg, var(--pink), var(--lilac)); }
+
+		main { position: relative; z-index: 1; }
+		.slide { position: relative; display: none; min-height: 100vh; min-height: 100svh; align-content: center; justify-items: center; padding: 112px 24px 91px; overflow: hidden; }
+		.slide.is-active { display: grid; animation: slide-in .65s cubic-bezier(.19,.73,.25,1) both; }
+		.slide-inner { position: relative; z-index: 2; width: min(100%, 940px); margin-inline: auto; text-align: center; }
+		.eyebrow { margin: 0 0 11px; color: var(--lavender); font-size: 10px; font-weight: 700; letter-spacing: 2.6px; text-transform: uppercase; }
+		h1, h2, h3, p { margin-top: 0; }
+		h1, h2 { margin-bottom: 0; font-family: var(--display); font-weight: 500; line-height: 1.13; text-wrap: balance; }
+		.slide h1 { font-size: clamp(40px, 6.6vw, 70px); }
+		.slide h2 { font-size: clamp(36px, 5.5vw, 58px); }
+		.accent { color: var(--pink-deep); font-style: italic; }
+		.supporting { max-width: 590px; margin: 14px auto 0; color: var(--muted); font-size: clamp(14px, 2vw, 17px); text-wrap: balance; }
+		.name-signature { margin: 9px 0 0; color: #987588; font-family: var(--display); font-size: 19px; font-style: italic; }
+		.button-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 19px; }
+		.button { display: inline-flex; min-height: 47px; align-items: center; justify-content: center; gap: 9px; padding: 11px 21px; border: 1px solid transparent; border-radius: 999px; background: linear-gradient(120deg, #be74a1, #9d7db9); box-shadow: 0 9px 25px rgba(148, 103, 154, .21); color: white; cursor: pointer; font-size: 13px; font-weight: 700; text-decoration: none; transition: transform .2s ease, box-shadow .2s ease, filter .2s ease; -webkit-tap-highlight-color: transparent; }
+		.button:hover { transform: translateY(-3px); box-shadow: 0 13px 28px rgba(148, 103, 154, .29); filter: saturate(1.08); }
+		.button:active { transform: translateY(0) scale(.98); }
+		.button.secondary { border-color: rgba(157, 125, 185, .28); background: rgba(255,255,255,.53); box-shadow: none; color: #725f81; }
+		.button.secondary:hover { background: rgba(255,255,255,.82); }
+		.button[disabled] { cursor: not-allowed; opacity: .45; }
+		.button-icon { font-size: 17px; }
+		.slide-nav { position: absolute; z-index: 5; right: 0; bottom: 24px; left: 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
+		.nav-label { margin: 0 4px; color: #81758b; font-size: 11px; }
+		.slide-number { position: absolute; right: 25px; bottom: 33px; color: #aa9bb1; font-size: 10px; letter-spacing: 1px; }
+		.float-decor { position: absolute; z-index: 1; pointer-events: none; }
+		.butterfly { color: #a985ba; font-size: 23px; filter: drop-shadow(0 0 8px rgba(255,255,255,.8)); animation: butterfly-fly 6.5s ease-in-out infinite; }
+		.butterfly.b1 { top: 23%; left: 12%; }
+		.butterfly.b2 { top: 32%; right: 13%; color: #cb799c; animation-delay: -2.4s; }
+		.butterfly.b3 { right: 21%; bottom: 20%; color: #c99e71; font-size: 18px; animation-delay: -4s; }
+		.heart-float { color: #e196b6; font-size: 20px; opacity: .75; animation: heart-drift 4.5s ease-in-out infinite; }
+		.balloon-decor { width: 35px; height: 46px; border: 1px solid rgba(255,255,255,.75); border-radius: 53% 53% 48% 48%; background: var(--balloon); box-shadow: inset -6px -5px rgba(87, 73, 87, .08), 0 7px 18px rgba(112, 92, 109, .1); animation: balloon-float 5s ease-in-out infinite; }
+		.balloon-decor::before { position: absolute; bottom: -4px; left: 15px; width: 7px; height: 7px; background: inherit; clip-path: polygon(0 0,100% 0,50% 100%); content: ""; }
+		.balloon-decor::after { position: absolute; top: calc(100% + 3px); left: 17px; width: 1px; height: 55px; background: rgba(118, 107, 120, .37); content: ""; }
+
+		/* Slide 1: a gift box with CSS balloons and opening animation. */
+		.opening { background: radial-gradient(ellipse at 50% 57%, rgba(255,255,255,.58), transparent 50%); }
+		.gift-stage { position: relative; display: grid; min-height: 290px; place-items: center; margin: 4px auto 0; }
+		.gift { position: relative; width: 170px; height: 154px; margin-top: 48px; cursor: pointer; filter: drop-shadow(0 19px 21px rgba(136, 88, 119, .2)); -webkit-tap-highlight-color: transparent; }
+		.gift:focus-visible { outline: 3px solid var(--pink-deep); outline-offset: 12px; border-radius: 14px; }
+		.gift-box { position: absolute; right: 0; bottom: 0; left: 0; height: 119px; border: 1px solid rgba(181, 101, 147, .21); border-radius: 4px 4px 12px 12px; background: linear-gradient(145deg, #e8a8c9, #c67eb0); }
+		.gift-box::before { position: absolute; top: 0; bottom: 0; left: 69px; width: 33px; background: linear-gradient(90deg, #f7e1ae, #fff0ce, #f0d48d); box-shadow: 0 1px rgba(255,255,255,.65); content: ""; }
+		.gift-box::after { position: absolute; top: 42px; right: 0; left: 0; height: 22px; background: linear-gradient(180deg, #f0c5dc, #e9adce); content: ""; }
+		.gift-lid { position: absolute; z-index: 2; top: 20px; left: -9px; width: 188px; height: 37px; border-radius: 5px; background: linear-gradient(135deg, #d996bf, #bf77a8); transform-origin: 9% 90%; transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+		.gift-lid::before { position: absolute; top: 0; bottom: 0; left: 77px; width: 32px; background: linear-gradient(90deg, #f7e1ae, #fff3d2, #f0d48d); content: ""; }
+		.gift-bow { position: absolute; z-index: 3; top: -1px; left: 73px; width: 25px; height: 25px; border: 7px solid #f5d991; border-radius: 50% 50% 50% 10%; transform: rotate(37deg); transition: transform .6s ease; }
+		.gift-bow::after { position: absolute; top: -7px; left: 9px; width: 25px; height: 25px; border: 7px solid #f5d991; border-radius: 50% 50% 10% 50%; content: ""; }
+		.gift.is-open .gift-lid { transform: translate(-38px, -68px) rotate(-25deg); }
+		.gift.is-open .gift-bow { transform: translate(-16px, -72px) rotate(-26deg); }
+		.gift-sparkle { position: absolute; z-index: 1; color: white; font-size: 19px; text-shadow: 0 0 11px #fff; animation: twinkle 2s ease-in-out infinite; }
+		.gift-sparkle.s1 { top: 12%; left: 26%; }
+		.gift-sparkle.s2 { top: 27%; right: 23%; color: #dc9bbd; animation-delay: .7s; }
+		.gift-sparkle.s3 { bottom: 15%; left: 23%; color: #b89ad3; animation-delay: 1.3s; }
+		.opening-balloon { position: absolute; z-index: 1; left: var(--x); top: var(--y); width: 37px; height: 49px; border: 1px solid rgba(255,255,255,.68); border-radius: 54% 54% 48% 48%; background: var(--color); box-shadow: inset -6px -5px rgba(94,74,83,.08), 0 7px 17px rgba(101,83,96,.1); animation: balloon-float var(--speed, 4.8s) ease-in-out infinite; animation-delay: var(--delay, 0s); }
+		.opening-balloon::before { position: absolute; bottom: -4px; left: 16px; width: 7px; height: 7px; background: inherit; clip-path: polygon(0 0,100% 0,50% 100%); content: ""; }
+		.opening-balloon::after { position: absolute; top: calc(100% + 3px); left: 18px; width: 1px; height: 43px; background: rgba(115,101,114,.39); content: ""; }
+		.opening-balloon.popping { animation: pop-away .42s ease-in forwards; }
+		.opening-balloon:nth-of-type(1) { --x: 12%; --y: 18%; --color: #efabc1; }
+		.opening-balloon:nth-of-type(2) { --x: 22%; --y: 60%; --color: #c8b4df; --delay: -1.3s; }
+		.opening-balloon:nth-of-type(3) { --x: 77%; --y: 20%; --color: #b8d9c2; --delay: -.8s; --speed: 5.2s; }
+		.opening-balloon:nth-of-type(4) { --x: 83%; --y: 62%; --color: #f2ce91; --delay: -2s; }
+		.opening-balloon:nth-of-type(5) { --x: 37%; --y: 5%; --color: #f1b7a6; --delay: -2.6s; --speed: 5.5s; }
+		.opening-balloon:nth-of-type(6) { --x: 62%; --y: 8%; --color: #d5b8dc; --delay: -1.7s; --speed: 5s; }
+		.toast { position: fixed; z-index: 35; top: 78px; left: 50%; width: min(520px, calc(100% - 28px)); padding: 16px 20px; border: 1px solid rgba(255,255,255,.84); border-radius: 12px; background: rgba(255,250,249,.88); box-shadow: 0 14px 46px rgba(121,84,121,.18); color: #695471; font-family: var(--display); font-size: clamp(17px, 3vw, 23px); line-height: 1.4; text-align: center; opacity: 0; pointer-events: none; transform: translate(-50%, -14px); transition: opacity .3s ease, transform .3s ease; backdrop-filter: blur(15px); }
+		.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+		/* Slide 2: three individually clickable candles. */
+		.cake-slide { background: radial-gradient(ellipse at 50% 61%, rgba(255,255,255,.5), transparent 53%); }
+		.cake-stage { position: relative; display: grid; width: min(100%, 410px); min-height: 330px; place-items: end center; margin: 15px auto 7px; padding: 20px 22px 46px; border: 1px solid rgba(255,255,255,.57); border-radius: 47% 47% 7px 7px; background: linear-gradient(145deg, rgba(255,255,255,.3), rgba(255,255,255,.07)); box-shadow: inset 0 1px rgba(255,255,255,.45), 0 22px 65px rgba(135,105,153,.11); }
+		.cake-stage::before { position: absolute; right: 12%; bottom: 16px; left: 12%; height: 22px; border-radius: 50%; background: rgba(170,131,179,.15); filter: blur(13px); content: ""; }
+		.birthday-cake { position: relative; z-index: 1; display: grid; width: min(100%, 298px); justify-items: center; padding-top: 97px; filter: drop-shadow(0 13px 15px rgba(100,74,98,.16)); }
+		.cake-candles { position: absolute; z-index: 3; top: 16px; display: flex; align-items: end; gap: 31px; }
+		.cake-candle { position: relative; width: 15px; height: 60px; padding: 0; border: 0; border-radius: 5px 5px 2px 2px; background: repeating-linear-gradient(135deg, #fff8ec 0 8px, #df90ad 8px 15px); cursor: pointer; box-shadow: inset -2px 0 rgba(119,81,98,.13); transition: opacity .2s ease, transform .2s ease; }
+		.cake-candle:nth-child(2) { height: 70px; background: repeating-linear-gradient(135deg, #fff8ec 0 8px, #a28ac4 8px 15px); }
+		.cake-candle:nth-child(3) { background: repeating-linear-gradient(135deg, #fff8ec 0 8px, #e9b971 8px 15px); }
+		.cake-candle:hover { transform: translateY(-3px); }
+		.cake-candle:focus-visible { outline: 3px solid var(--pink-deep); outline-offset: 4px; }
+		.cake-candle[data-blown="true"] { cursor: default; }
+		.candle-wick { position: absolute; top: -5px; left: 6px; width: 3px; height: 8px; border-radius: 2px; background: #65505b; }
+		.candle-flame { position: absolute; top: -27px; left: 2px; width: 12px; height: 21px; border-radius: 55% 45% 58% 42%; background: #ffe39a; box-shadow: 0 0 8px 3px rgba(255,207,105,.7), 0 0 22px 9px rgba(255,166,115,.26); transform-origin: 50% 90%; animation: candle-flame .5s ease-in-out infinite alternate; transition: opacity .18s ease, transform .25s ease; }
+		.candle-flame::after { position: absolute; right: 3px; bottom: 3px; left: 3px; height: 9px; border-radius: 50%; background: #fff9dd; content: ""; }
+		.cake-candle[data-blown="true"] .candle-flame { opacity: 0; transform: translateY(-24px) scale(.1); }
+		.cake-tier { position: relative; display: flex; align-items: center; justify-content: space-evenly; border: 1px solid rgba(255,255,255,.55); box-shadow: inset 0 8px rgba(255,255,255,.32); }
+		.cake-tier::before { position: absolute; top: 8px; right: 12px; left: 12px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.59); content: ""; }
+		.cake-tier-top { width: 66%; height: 58px; border-radius: 12px 12px 5px 5px; background: linear-gradient(180deg, #f3c48d, #eaa77d); }
+		.cake-tier-middle { width: 84%; height: 66px; margin-top: -3px; background: linear-gradient(180deg, #db9fc1, #ca83b1); }
+		.cake-tier-bottom { width: 100%; height: 72px; margin-top: -3px; border-radius: 5px 5px 12px 12px; background: linear-gradient(180deg, #bba8d9, #9f8bc5); }
+		.cake-berry { z-index: 1; width: 8px; height: 8px; margin-top: 11px; border-radius: 50%; background: #fff5d7; box-shadow: 0 2px 4px rgba(86,64,96,.13); }
+		.cake-plate { z-index: 0; width: 110%; height: 15px; margin-top: -2px; border: 1px solid rgba(255,255,255,.72); border-radius: 50%; background: linear-gradient(#fffefa, #e9dbe8); }
+		.candles-instruction { margin: 0; color: #887991; font-size: 12px; }
+		.wish-reveal { min-height: 38px; margin: 8px 0 0; color: var(--pink-deep); font-family: var(--display); font-size: 25px; font-style: italic; opacity: 0; transform: translateY(7px); transition: opacity .4s ease, transform .4s ease; }
+		.wish-reveal.visible { opacity: 1; transform: translateY(0); }
+		.cake-balloon { top: 20%; left: 9%; --balloon: #edb0c8; }
+		.cake-balloon.two { top: 38%; left: 4%; --balloon: #c3b1dc; animation-delay: -1.7s; }
+		.cake-balloon.three { top: 20%; right: 9%; left: auto; --balloon: #f2d291; animation-delay: -1.1s; }
+		.cake-balloon.four { top: 40%; right: 4%; left: auto; --balloon: #b3d7c0; animation-delay: -2.2s; }
+
+		/* Slide 3: replace each placeholder div with an img using class memory-image. */
+		.memories-slide { align-content: start; padding-top: 107px; }
+		.memories-content { width: min(100%, 970px); }
+		.gallery-shell { position: relative; width: min(100%, 560px); margin: 25px auto 0; }
+		.photo-frame { position: relative; width: min(100%, 405px); margin: 0 auto; padding: 12px 12px 51px; border: 1px solid rgba(127,103,133,.11); border-radius: 5px; background: #fffdfa; box-shadow: 0 17px 48px rgba(114,89,123,.16); transform: rotate(-1.2deg); }
+		.memory-photo { position: relative; display: grid; width: 100%; aspect-ratio: 1.25; place-items: center; overflow: hidden; background: linear-gradient(145deg, #ecc0cf, #f5dba8 48%, #a9cdb6); }
+		.memory-photo::before, .memory-photo::after { position: absolute; right: -10%; bottom: -40%; left: -10%; height: 78%; border-radius: 50%; content: ""; }
+		.memory-photo::before { background: rgba(113,143,118,.7); transform: rotate(-8deg); }
+		.memory-photo::after { bottom: -51%; background: rgba(83,110,102,.64); transform: rotate(8deg); }
+		.memory-photo.scene-2 { background: linear-gradient(145deg, #d5b7dd, #f3c2bc 50%, #f5dcab); }
+		.memory-photo.scene-2::before { background: rgba(190,127,153,.7); }
+		.memory-photo.scene-2::after { background: rgba(117,88,125,.64); }
+		.memory-photo.scene-3 { background: linear-gradient(145deg, #a9d1cd, #f0d5a7 54%, #ecac9e); }
+		.memory-photo.scene-3::before { background: rgba(133,158,114,.7); }
+		.memory-photo.scene-3::after { background: rgba(77,117,111,.64); }
+		.memory-photo.scene-4 { background: linear-gradient(145deg, #f3bdab, #f3d995 52%, #c8afd9); }
+		.memory-photo.scene-4::before { background: rgba(197,136,151,.68); }
+		.memory-photo.scene-4::after { background: rgba(113,95,132,.64); }
+		.memory-sun { position: absolute; top: 13%; right: 14%; width: 40px; aspect-ratio: 1; border-radius: 50%; background: rgba(255,249,216,.92); box-shadow: 0 0 28px rgba(255,245,192,.67); }
+		.memory-caption { position: absolute; right: 8px; bottom: 12px; left: 8px; color: #77687a; font-family: var(--display); font-size: 19px; font-style: italic; }
+		.memory-image { display: block; width: 100%; aspect-ratio: 1.25; object-fit: cover; }
+		.gallery-arrow { position: absolute; z-index: 2; top: 42%; display: grid; width: 41px; height: 41px; place-items: center; border: 1px solid rgba(255,255,255,.79); border-radius: 50%; background: rgba(255,255,255,.69); box-shadow: 0 7px 20px rgba(95,75,106,.12); color: #7b668a; cursor: pointer; font-size: 21px; transition: transform .2s ease, background .2s ease; }
+		.gallery-arrow:hover { transform: scale(1.08); background: white; }
+		.gallery-arrow.prev { left: -5px; }
+		.gallery-arrow.next { right: -5px; }
+		.photo-status { margin: 13px 0 0; color: #8c7d91; font-size: 11px; font-variant-numeric: tabular-nums; letter-spacing: 1px; }
+		.photo-dots { display: flex; justify-content: center; gap: 7px; margin-top: 8px; }
+		.photo-dot { width: 7px; height: 7px; padding: 0; border: 0; border-radius: 50%; background: rgba(134,105,149,.29); cursor: pointer; transition: transform .2s ease, background .2s ease; }
+		.photo-dot.active { background: var(--pink-deep); transform: scale(1.35); }
+		.memories-slide .slide-nav { bottom: 24px; }
+
+		/* Slide 4: this iframe uses the real FLOWER/index.html, style.css, and index.js.
+			 Keep FLOWER beside the Harshita Singh folder so this relative path works. */
+		.final-slide { min-height: 100vh; min-height: 100svh; padding: 118px 20px 75px; background: #11131a; color: #fffaf8; }
+		.flower-frame { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; border: 0; background: #050708; }
+		.final-vignette { position: absolute; z-index: 1; inset: 0; background: linear-gradient(180deg, rgba(22,18,31,.82) 0%, rgba(22,18,31,.57) 36%, rgba(22,18,31,.08) 71%, rgba(22,18,31,.12) 100%), radial-gradient(ellipse at 50% 12%, rgba(221,164,205,.19), transparent 58%); pointer-events: none; }
+		.final-slide .slide-inner { z-index: 2; margin-top: -23px; }
+		.final-slide .eyebrow { color: #f1c5de; }
+		.final-slide h2 { max-width: 860px; margin-inline: auto; color: #fff8f2; font-size: clamp(37px, 6vw, 65px); text-shadow: 0 3px 26px rgba(28,16,35,.5); }
+		.final-slide .accent { color: #ffd1e2; }
+		.final-copy { max-width: 720px; margin: 17px auto 0; color: #fff1f1; font-family: var(--display); font-size: clamp(17px, 2.6vw, 23px); line-height: 1.75; text-shadow: 0 2px 12px rgba(29,15,32,.6); text-wrap: balance; }
+		.final-signature { margin: 11px 0 0; color: #f2c8db; font-family: var(--display); font-size: 19px; font-style: italic; text-shadow: 0 2px 11px rgba(29,15,32,.6); }
+		.final-slide .slide-nav .button.secondary { border-color: rgba(255,255,255,.48); background: rgba(39,29,47,.5); color: #fff9f3; backdrop-filter: blur(8px); }
+
+		.confetti-layer { position: fixed; z-index: 50; inset: 0; overflow: hidden; pointer-events: none; }
+		.confetti-piece { position: absolute; top: -18px; left: var(--x); width: var(--size); height: calc(var(--size) * 1.55); border-radius: 2px; background: var(--color); opacity: 0; animation: confetti-fall var(--duration) var(--delay) cubic-bezier(.2,.63,.4,.98) forwards; }
+		.final-heart { position: absolute; z-index: 1; color: #ffb8d2; font-size: 21px; text-shadow: 0 0 16px #ffcee3; animation: heart-drift 4s ease-in-out infinite; }
+		.final-heart.h1 { top: 39%; left: 8%; }
+		.final-heart.h2 { top: 52%; right: 8%; animation-delay: -1.3s; }
+
+		@keyframes slide-in { from { opacity: 0; transform: translateY(13px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+		@keyframes twinkle { 0%,100% { opacity: .43; transform: scale(.78) rotate(-8deg); } 50% { opacity: 1; transform: scale(1.19) rotate(8deg); } }
+		@keyframes balloon-float { 0%,100% { translate: 0 0; rotate: -4deg; } 50% { translate: 0 -14px; rotate: 4deg; } }
+		@keyframes butterfly-fly { 0%,100% { translate: 0 0; rotate: -8deg; } 35% { translate: 15px -11px; rotate: 8deg; } 70% { translate: -8px -17px; rotate: -4deg; } }
+		@keyframes heart-drift { 0%,100% { opacity: .48; transform: translateY(0) rotate(-7deg); } 50% { opacity: .94; transform: translateY(-12px) rotate(7deg); } }
+		@keyframes gift-open-pop { 0% { scale: .7; opacity: 0; } 60% { scale: 1.15; opacity: 1; } 100% { scale: 1; opacity: 0; } }
+		@keyframes pop-away { 0% { opacity: 1; scale: 1; } 40% { opacity: .9; scale: 1.2; } 100% { opacity: 0; scale: .08; } }
+		@keyframes candle-flame { to { transform: rotate(5deg) scaleY(1.08); } }
+		@keyframes confetti-fall { 0% { opacity: 0; transform: translate3d(0,-4vh,0) rotate(0); } 9% { opacity: 1; } 84% { opacity: 1; } 100% { opacity: 0; transform: translate3d(var(--drift),108vh,0) rotate(var(--spin)); } }
+		@keyframes dust-drift { to { background-position: 47px 47px; } }
+
+		@media (max-width: 680px) {
+			.topbar { width: calc(100% - 26px); padding-block: 11px; }
+			.brand { font-size: 9px; letter-spacing: 1px; }
+			.top-actions { gap: 6px; }
+			.countdown { gap: 4px; padding: 5px 8px; font-size: 9px; }
+			.sound-toggle { min-width: 69px; min-height: 33px; padding-inline: 8px; font-size: 10px; }
+			.progress { top: 51px; }
+			.slide { padding: 98px 17px 84px; }
+			.slide h1 { font-size: clamp(39px, 9vw, 60px); }
+			.slide h2 { font-size: clamp(34px, 8vw, 49px); }
+			.gift-stage { min-height: 256px; }
+			.opening-balloon { scale: .77; }
+			.opening-balloon:nth-of-type(1) { --x: 1%; --y: 19%; }
+			.opening-balloon:nth-of-type(2) { --x: 3%; --y: 62%; }
+			.opening-balloon:nth-of-type(3) { --x: 87%; --y: 17%; }
+			.opening-balloon:nth-of-type(4) { --x: 85%; --y: 62%; }
+			.opening-balloon:nth-of-type(5) { --x: 26%; --y: 3%; }
+			.opening-balloon:nth-of-type(6) { --x: 66%; --y: 3%; }
+			.butterfly.b1 { left: 3%; }
+			.butterfly.b2 { right: 4%; }
+			.cake-stage { min-height: 296px; width: min(100%, 360px); padding-bottom: 38px; }
+			.birthday-cake { width: min(100%, 255px); }
+			.cake-balloon { scale: .76; }
+			.cake-balloon.two { left: -2%; }
+			.cake-balloon.four { right: -2%; }
+			.memories-slide { padding-top: 93px; }
+			.gallery-shell { width: min(100% - 14px, 470px); margin-top: 19px; }
+			.photo-frame { width: min(100%, 360px); }
+			.gallery-arrow.prev { left: -12px; }
+			.gallery-arrow.next { right: -12px; }
+			.final-slide { padding-inline: 17px; }
+			.final-slide .slide-inner { margin-top: -10px; }
+			.final-heart.h1 { left: 3%; }
+			.final-heart.h2 { right: 3%; }
+			.slide-number { right: 14px; bottom: 32px; }
+		}
+		@media (max-width: 390px) {
+			.countdown { max-width: 158px; font-size: 8px; }
+			.countdown strong { font-size: 9px; }
+			.brand { gap: 5px; font-size: 8px; }
+			.slide { padding-inline: 13px; }
+			.gift { scale: .88; }
+			.gift-stage { min-height: 230px; }
+			.cake-stage { min-height: 276px; }
+			.cake-candles { gap: 25px; }
+			.memories-slide { padding-top: 89px; }
+			.photo-frame { padding: 9px 9px 45px; }
+			.memory-caption { font-size: 17px; }
+			.gallery-arrow { width: 36px; height: 36px; }
+		}
+		@media (prefers-reduced-motion: reduce) {
+			*, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+		}
+	</style>
+</head>
+<body>
+	<div class="app">
+		<div class="sparkle-field" aria-hidden="true"><span>✦</span><span>✧</span><span>✦</span><span>✧</span><span>✧</span><span>✦</span></div>
+
+		<header class="topbar">
+			<a class="brand" href="#slide-1" aria-label="Birthday surprise home"><span class="brand-star" aria-hidden="true">✿</span> Just for Harshita</a>
+			<div class="top-actions">
+				<div class="countdown" aria-live="polite"><span>Birthday countdown</span><strong id="countdown-display">-- d&nbsp; --:--:--</strong></div>
+				<button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="true" aria-label="Mute birthday music"><span class="sound-icon" aria-hidden="true">♫</span><span id="sound-label">Sound on</span></button>
+			</div>
+		</header>
+
+		<nav class="progress" aria-label="Slide navigation">
+			<button class="progress-button" type="button" data-slide-to="0" aria-label="Go to slide 1" aria-current="step"><span class="progress-dot"></span></button>
+			<button class="progress-button" type="button" data-slide-to="1" aria-label="Go to slide 2"><span class="progress-dot"></span></button>
+			<button class="progress-button" type="button" data-slide-to="2" aria-label="Go to slide 3"><span class="progress-dot"></span></button>
+			<button class="progress-button" type="button" data-slide-to="3" aria-label="Go to slide 4"><span class="progress-dot"></span></button>
+		</nav>
+
+		<main id="birthday-card">
+			<!-- SLIDE 1: the gift unlocks the birthday toast and the Next button. -->
+			<section class="slide opening is-active" id="slide-1" aria-labelledby="opening-title" aria-hidden="false">
+				<span class="float-decor butterfly b1" aria-hidden="true">🦋</span>
+				<span class="float-decor butterfly b2" aria-hidden="true">🦋</span>
+				<span class="float-decor balloon-decor" style="--balloon:#edb3c7;top:27%;left:5%" aria-hidden="true"></span>
+				<span class="float-decor balloon-decor" style="--balloon:#c6b5de;top:56%;right:6%;animation-delay:-1.5s" aria-hidden="true"></span>
+				<div class="slide-inner">
+					<p class="eyebrow">A little birthday magic</p>
+					<h1 id="opening-title">A Special Surprise<br><span class="accent">For Harshita</span> ❤️</h1>
+					<p class="supporting">A tiny gift, a little sparkle, and so much love tucked inside.</p>
+					<div class="gift-stage">
+						<span class="opening-balloon"></span><span class="opening-balloon"></span><span class="opening-balloon"></span>
+						<span class="opening-balloon"></span><span class="opening-balloon"></span><span class="opening-balloon"></span>
+						<span class="gift-sparkle s1" aria-hidden="true">✦</span><span class="gift-sparkle s2" aria-hidden="true">✧</span><span class="gift-sparkle s3" aria-hidden="true">✦</span>
+						<div class="gift" id="gift-box" role="button" tabindex="0" aria-label="Open your birthday gift">
+							<div class="gift-box"></div><div class="gift-lid"></div><div class="gift-bow"></div>
+						</div>
+					</div>
+					<p class="name-signature">For Harshita Singh, with love</p>
+					<div class="button-row">
+						<button class="button" id="open-gift" type="button">Open Your Surprise <span class="button-icon" aria-hidden="true">🎁</span></button>
+						<button class="button secondary" data-next type="button" hidden>Next <span aria-hidden="true">→</span></button>
+					</div>
+				</div>
+				<div class="slide-nav"><span class="nav-label">A surprise is waiting for you</span></div>
+				<span class="slide-number">01 / 04</span>
+			</section>
+
+			<!-- SLIDE 2: tap each candle. The next slide unlocks after all three are out. -->
+			<section class="slide cake-slide" id="slide-2" aria-labelledby="cake-title" aria-hidden="true" inert>
+				<span class="float-decor butterfly b1" aria-hidden="true">🦋</span><span class="float-decor butterfly b2" aria-hidden="true">🦋</span>
+				<span class="float-decor balloon-decor cake-balloon" aria-hidden="true"></span><span class="float-decor balloon-decor cake-balloon two" aria-hidden="true"></span>
+				<span class="float-decor balloon-decor cake-balloon three" aria-hidden="true"></span><span class="float-decor balloon-decor cake-balloon four" aria-hidden="true"></span>
+				<div class="slide-inner">
+					<p class="eyebrow">Make a wish, birthday girl</p>
+					<h2 id="cake-title">Happy Birthday <span class="accent">Harshita!</span> 🎂✨</h2>
+					<p class="supporting">Three little candles. Three wonderful wishes. Tap each flame to blow it out.</p>
+					<div class="cake-stage" aria-label="Three-layer birthday cake">
+						<div class="birthday-cake">
+							<div class="cake-candles">
+								<button class="cake-candle" type="button" aria-label="Blow out candle 1"><span class="candle-wick"></span><span class="candle-flame"></span></button>
+								<button class="cake-candle" type="button" aria-label="Blow out candle 2"><span class="candle-wick"></span><span class="candle-flame"></span></button>
+								<button class="cake-candle" type="button" aria-label="Blow out candle 3"><span class="candle-wick"></span><span class="candle-flame"></span></button>
+							</div>
+							<div class="cake-tier cake-tier-top"><i class="cake-berry"></i><i class="cake-berry"></i><i class="cake-berry"></i></div>
+							<div class="cake-tier cake-tier-middle"><i class="cake-berry"></i><i class="cake-berry"></i><i class="cake-berry"></i><i class="cake-berry"></i></div>
+							<div class="cake-tier cake-tier-bottom"><i class="cake-berry"></i><i class="cake-berry"></i><i class="cake-berry"></i><i class="cake-berry"></i><i class="cake-berry"></i></div>
+							<div class="cake-plate"></div>
+						</div>
+					</div>
+					<p class="candles-instruction" id="candle-instruction" aria-live="polite">3 candles still glowing ✨</p>
+					<p class="wish-reveal" id="wish-reveal" aria-live="polite">Make a Wish! ✨💖</p>
+					<div class="button-row">
+						<button class="button secondary" data-previous type="button"><span aria-hidden="true">←</span> Previous</button>
+						<button class="button" data-next type="button" hidden>Next <span aria-hidden="true">→</span></button>
+					</div>
+				</div>
+				<span class="slide-number">02 / 04</span>
+			</section>
+
+			<!-- SLIDE 3: replace the illustrated placeholders with supplied real photos. -->
+			<section class="slide memories-slide" id="slide-3" aria-labelledby="memories-title" aria-hidden="true" inert>
+				<span class="float-decor butterfly b1" aria-hidden="true">🦋</span><span class="float-decor butterfly b2" aria-hidden="true">🦋</span>
+				<span class="float-decor heart-float" style="top:29%;left:10%" aria-hidden="true">♡</span><span class="float-decor heart-float" style="right:11%;bottom:23%;animation-delay:-1.4s" aria-hidden="true">♥</span>
+				<div class="slide-inner memories-content">
+					<p class="eyebrow">A little collection of us</p>
+					<h2 id="memories-title">Beautiful Memories<br><span class="accent">of Harshita</span> 💕</h2>
+					<p class="supporting">Every picture holds a little piece of a day I love remembering.</p>
+					<div class="gallery-shell" aria-label="Harshita's birthday photo gallery">
+						<button class="gallery-arrow prev" id="photo-previous" type="button" aria-label="Previous memory">‹</button>
+						<figure class="photo-frame" id="photo-frame" aria-live="polite">
+							<!-- Replace each .memory-photo placeholder with <img class="memory-image" src="photos/your-photo.jpg" alt="Describe the memory">. Add or remove .photo-item blocks as needed. -->
+							<div class="memory-photo scene-1 photo-item is-current" data-caption="A little sunshine, a lot of laughter" role="img" aria-label="Pastel garden illustration, replace with a real photo"><span class="memory-sun"></span></div>
+							<div class="memory-photo scene-2 photo-item" data-caption="Our favorite kind of day" role="img" aria-label="Pastel sunset illustration, replace with a real photo" hidden><span class="memory-sun"></span></div>
+							<div class="memory-photo scene-3 photo-item" data-caption="Just us being wonderfully us" role="img" aria-label="Pastel twilight illustration, replace with a real photo" hidden><span class="memory-sun"></span></div>
+							<div class="memory-photo scene-4 photo-item" data-caption="A memory I'll keep close" role="img" aria-label="Pastel hills illustration, replace with a real photo" hidden><span class="memory-sun"></span></div>
+							<figcaption class="memory-caption" id="photo-caption">A little sunshine, a lot of laughter</figcaption>
+						</figure>
+						<button class="gallery-arrow next" id="photo-next" type="button" aria-label="Next memory">›</button>
+						<p class="photo-status" id="photo-status" aria-live="polite">01 / 04</p>
+						<div class="photo-dots" id="photo-dots" aria-label="Choose a memory photo"></div>
+					</div>
+					<div class="button-row">
+						<button class="button secondary" data-previous type="button"><span aria-hidden="true">←</span> Previous</button>
+						<button class="button" data-next type="button">Next <span aria-hidden="true">→</span></button>
+					</div>
+				</div>
+				<span class="slide-number">03 / 04</span>
+			</section>
+
+			<!-- SLIDE 4: the flower animation is loaded from the existing FLOWER project. -->
+			<section class="slide final-slide" id="slide-4" aria-labelledby="final-title" aria-hidden="true" inert>
+				<iframe class="flower-frame" src="../FLOWER/index.html" title="The animated flower surprise for Harshita" loading="eager"></iframe>
+				<div class="final-vignette" aria-hidden="true"></div>
+				<span class="final-heart h1" aria-hidden="true">♥</span><span class="final-heart h2" aria-hidden="true">♡</span>
+				<div class="slide-inner">
+					<p class="eyebrow">One last thing, with all my love</p>
+					<h2 id="final-title">🎉 HAPPY BIRTHDAY<br><span class="accent">HARSHITA SINGH</span> 🎉</h2>
+					<p class="final-copy">May your life always be filled with happiness, success, laughter and countless beautiful memories. ❤️✨</p>
+					<p class="final-signature">You make life bloom just by being you.</p>
+				</div>
+				<div class="slide-nav"><button class="button secondary" data-previous type="button"><span aria-hidden="true">←</span> Previous</button></div>
+				<span class="slide-number">04 / 04</span>
+			</section>
+		</main>
+
+		<div class="toast" id="birthday-toast" role="status" aria-live="polite" aria-hidden="true">🎉 Happy Birthday Harshita Singh! 🎂<br>Wishing you a day filled with happiness, love and beautiful memories! ❤️</div>
+	</div>
+
+	<script>
+		// Set the birthday month (1-12) and day here to activate the opening countdown.
+		const BIRTHDAY_MONTH = null;
+		const BIRTHDAY_DAY = null;
+
+		const slides = [...document.querySelectorAll(".slide")];
+		const progressButtons = [...document.querySelectorAll(".progress-button")];
+		const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		let activeSlide = 0;
+		let musicOn = true;
+		let audioContext;
+		let musicTimer;
+		let musicGain;
+		let noteIndex = 0;
+		const melody = [523.25, 659.25, 783.99, 659.25, 587.33, 698.46, 880, 698.46];
+		const confettiColors = ["#eea7c0", "#c9b6e6", "#f5df9c", "#b6d8c4", "#f5c3a3", "#fffaf5"];
+
+		// Change BIRTHDAY_MONTH and BIRTHDAY_DAY above to start the live yearly countdown.
+		function nextBirthdayDate() {
+			if (!Number.isInteger(BIRTHDAY_MONTH) || !Number.isInteger(BIRTHDAY_DAY) || BIRTHDAY_MONTH < 1 || BIRTHDAY_MONTH > 12 || BIRTHDAY_DAY < 1 || BIRTHDAY_DAY > 31) return null;
+			const now = new Date();
+			const next = new Date(now.getFullYear(), BIRTHDAY_MONTH - 1, BIRTHDAY_DAY, 0, 0, 0);
+			if (next.getMonth() !== BIRTHDAY_MONTH - 1) return null;
+			if (next <= now) next.setFullYear(next.getFullYear() + 1);
+			return next;
+		}
+		function updateCountdown() {
+			const display = document.querySelector("#countdown-display");
+			const target = nextBirthdayDate();
+			if (!target) {
+				display.textContent = "add birthday date";
+				display.setAttribute("aria-label", "Set Harshita's birthday month and day in the script to start the countdown");
+				return;
+			}
+			const remaining = Math.max(0, target.getTime() - Date.now());
+			const days = Math.floor(remaining / 86400000);
+			const hours = Math.floor((remaining % 86400000) / 3600000);
+			const minutes = Math.floor((remaining % 3600000) / 60000);
+			const seconds = Math.floor((remaining % 60000) / 1000);
+			display.textContent = `${days}d ${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
+		}
+		updateCountdown();
+		window.setInterval(updateCountdown, 1000);
+
+		// Lightweight original melody made with Web Audio; it needs no downloaded music file.
+		function playNote() {
+			if (!audioContext || !musicGain || !musicOn) return;
+			const oscillator = audioContext.createOscillator();
+			const envelope = audioContext.createGain();
+			const startAt = audioContext.currentTime;
+			oscillator.type = "sine";
+			oscillator.frequency.value = melody[noteIndex % melody.length];
+			noteIndex += 1;
+			envelope.gain.setValueAtTime(0.0001, startAt);
+			envelope.gain.exponentialRampToValueAtTime(0.055, startAt + .12);
+			envelope.gain.exponentialRampToValueAtTime(0.0001, startAt + 1.45);
+			oscillator.connect(envelope);
+			envelope.connect(musicGain);
+			oscillator.start(startAt);
+			oscillator.stop(startAt + 1.5);
+		}
+		async function startMusic() {
+			if (!musicOn) return;
+			const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+			if (!AudioContextClass) return;
+			if (!audioContext) {
+				audioContext = new AudioContextClass();
+				musicGain = audioContext.createGain();
+				musicGain.gain.value = .11;
+				musicGain.connect(audioContext.destination);
+			}
+			if (audioContext.state === "suspended") await audioContext.resume();
+			if (!musicTimer) {
+				playNote();
+				musicTimer = window.setInterval(playNote, 1650);
+			}
+		}
+		function setMusicButton() {
+			const button = document.querySelector("#sound-toggle");
+			document.querySelector("#sound-label").textContent = musicOn ? "Sound on" : "Muted";
+			button.setAttribute("aria-pressed", String(musicOn));
+			button.setAttribute("aria-label", musicOn ? "Mute birthday music" : "Unmute birthday music");
+			button.querySelector(".sound-icon").textContent = musicOn ? "♫" : "♪";
+			if (musicGain && audioContext) musicGain.gain.setTargetAtTime(musicOn ? .11 : 0, audioContext.currentTime, .12);
+			if (musicOn) startMusic();
+		}
+		document.querySelector("#sound-toggle").addEventListener("click", () => {
+			musicOn = !musicOn;
+			setMusicButton();
+		});
+
+		function launchConfetti(amount = 65) {
+			const layer = document.createElement("div");
+			layer.className = "confetti-layer";
+			layer.setAttribute("aria-hidden", "true");
+			for (let index = 0; index < amount; index += 1) {
+				const piece = document.createElement("i");
+				piece.className = "confetti-piece";
+				piece.style.setProperty("--x", `${Math.random() * 100}%`);
+				piece.style.setProperty("--size", `${5 + Math.random() * 7}px`);
+				piece.style.setProperty("--color", confettiColors[index % confettiColors.length]);
+				piece.style.setProperty("--duration", `${3 + Math.random() * 2.3}s`);
+				piece.style.setProperty("--delay", `${Math.random() * .7}s`);
+				piece.style.setProperty("--drift", `${Math.random() * 170 - 85}px`);
+				piece.style.setProperty("--spin", `${Math.random() * 900 - 450}deg`);
+				layer.appendChild(piece);
+			}
+			document.body.appendChild(layer);
+			window.setTimeout(() => layer.remove(), 5800);
+		}
+
+		function showSlide(index) {
+			if (index < 0 || index >= slides.length || index === activeSlide) return;
+			const previous = slides[activeSlide];
+			previous.classList.remove("is-active");
+			previous.setAttribute("aria-hidden", "true");
+			previous.inert = true;
+			activeSlide = index;
+			const current = slides[activeSlide];
+			current.inert = false;
+			current.setAttribute("aria-hidden", "false");
+			current.classList.remove("is-active");
+			void current.offsetWidth;
+			current.classList.add("is-active");
+			progressButtons.forEach((button, buttonIndex) => {
+				if (buttonIndex === activeSlide) button.setAttribute("aria-current", "step");
+				else button.removeAttribute("aria-current");
+			});
+			const heading = current.querySelector("h1, h2");
+			if (heading) {
+				heading.setAttribute("tabindex", "-1");
+				heading.focus({ preventScroll: true });
+			}
+			window.scrollTo({ top: 0, behavior: reduceMotion ? "instant" : "smooth" });
+			if (index === 3) launchConfetti(95);
+		}
+		document.querySelectorAll("[data-next]").forEach((button) => button.addEventListener("click", () => showSlide(activeSlide + 1)));
+		document.querySelectorAll("[data-previous]").forEach((button) => button.addEventListener("click", () => showSlide(activeSlide - 1)));
+		progressButtons.forEach((button) => button.addEventListener("click", () => showSlide(Number(button.dataset.slideTo))));
+
+		const gift = document.querySelector("#gift-box");
+		const giftButton = document.querySelector("#open-gift");
+		let giftOpened = false;
+		function openGift() {
+			if (giftOpened) return;
+			giftOpened = true;
+			gift.classList.add("is-open");
+			giftButton.disabled = true;
+			document.querySelectorAll(".opening-balloon").forEach((balloon, index) => {
+				window.setTimeout(() => balloon.classList.add("popping"), index * 150);
+			});
+			launchConfetti(90);
+			const toast = document.querySelector("#birthday-toast");
+			window.setTimeout(() => {
+				toast.classList.add("show");
+				toast.setAttribute("aria-hidden", "false");
+			}, 240);
+			if (musicOn) startMusic();
+			window.setTimeout(() => {
+				toast.classList.remove("show");
+				toast.setAttribute("aria-hidden", "true");
+				document.querySelector("#slide-1 [data-next]").hidden = false;
+			}, reduceMotion ? 900 : 2400);
+		}
+		giftButton.addEventListener("click", openGift);
+		gift.addEventListener("click", openGift);
+		gift.addEventListener("keydown", (event) => {
+			if (event.key === "Enter" || event.key === " ") {
+				event.preventDefault();
+				openGift();
+			}
+		});
+
+		const candles = [...document.querySelectorAll(".cake-candle")];
+		const candleInstruction = document.querySelector("#candle-instruction");
+		const wishReveal = document.querySelector("#wish-reveal");
+		candles.forEach((candle) => candle.addEventListener("click", () => {
+			if (candle.dataset.blown === "true") return;
+			candle.dataset.blown = "true";
+			candle.setAttribute("aria-pressed", "true");
+			const remaining = candles.filter((item) => item.dataset.blown !== "true").length;
+			candleInstruction.textContent = remaining ? `${remaining} candle${remaining === 1 ? "" : "s"} still glowing ✨` : "All your wishes are on their way! ✨";
+			if (remaining === 0) {
+				wishReveal.classList.add("visible");
+				document.querySelector("#slide-2 [data-next]").hidden = false;
+				launchConfetti(76);
+			}
+		}));
+
+		// Duplicate or remove .photo-item elements above to change the photo gallery size.
+		const photos = [...document.querySelectorAll(".photo-item")];
+		const photoCaption = document.querySelector("#photo-caption");
+		const photoStatus = document.querySelector("#photo-status");
+		const photoDots = document.querySelector("#photo-dots");
+		let activePhoto = 0;
+		photos.forEach((photo, index) => {
+			const dot = document.createElement("button");
+			dot.className = `photo-dot${index === 0 ? " active" : ""}`;
+			dot.type = "button";
+			dot.setAttribute("aria-label", `Show memory ${index + 1}`);
+			dot.setAttribute("aria-current", String(index === 0));
+			dot.addEventListener("click", () => showPhoto(index));
+			photoDots.appendChild(dot);
+		});
+		function showPhoto(index) {
+			activePhoto = (index + photos.length) % photos.length;
+			photos.forEach((photo, photoIndex) => {
+				const current = photoIndex === activePhoto;
+				photo.hidden = !current;
+				photo.classList.toggle("is-current", current);
+				photoDots.children[photoIndex].classList.toggle("active", current);
+				photoDots.children[photoIndex].setAttribute("aria-current", String(current));
+			});
+			photoCaption.textContent = photos[activePhoto].dataset.caption || `A lovely memory ${activePhoto + 1}`;
+			photoStatus.textContent = `${String(activePhoto + 1).padStart(2,"0")} / ${String(photos.length).padStart(2,"0")}`;
+		}
+		document.querySelector("#photo-previous").addEventListener("click", () => showPhoto(activePhoto - 1));
+		document.querySelector("#photo-next").addEventListener("click", () => showPhoto(activePhoto + 1));
+
+		document.addEventListener("keydown", (event) => {
+			if (event.key === "ArrowRight" && activeSlide < slides.length - 1) showSlide(activeSlide + 1);
+			if (event.key === "ArrowLeft" && activeSlide > 0) showSlide(activeSlide - 1);
+		});
+	</script>
+</body>
+</html>
